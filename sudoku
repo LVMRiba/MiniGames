@@ -1,0 +1,81 @@
+import random as rd
+import numpy as np
+
+set_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+set_row = {0}
+board = np.zeros((9, 9))
+
+"""
+No Sudoku Tradicional, existem espaços em que um número está devidamente alocado se ele atende as seguintes regras: 
+
+1 - Sua linha não possui números de 0 a 9 repetidos
+2 - Sua coluna não possui números de 0 a 9 repetidos
+3 - Seu setor não possui números de 0 a 9 repetidos
+
+Neste programa, esses 81 espaços (9 linhas x 9 colunas) que foram numerados de 0 a 80 que na configuração abaixo 
+estão distribuidos em seus respectivos setores. 
+
+SETOR 1: X = [0,2] & y = [0,2] cell={0, 1, 2, 9, 10, 11, 18, 19, 20}
+SETOR 2: X = [3,5] & Y = [0,2] cell={3, 4, 5, 12, 13, 14, 21, 22, 23}
+SETOR 3: X = [6,8] & Y = [0,2] cell={6, 7, 8, 15, 16, 17, 24, 25, 26}
+SETOR 4: X = [0,2] & y = [3,5] cell={27, 28, 29, 36, 37, 38, 45, 46, 47}
+SETOR 5: X = [3,5] & Y = [3,5] cell={30, 31, 32, 39, 40, 41, 48, 49, 50}
+SETOR 6: X = [6,8] & Y = [3,5] cell={33, 34, 35, 42, 43, 44, 51, 52, 53}
+SETOR 7: X = [0,2] & y = [6,8] cell={54, 55, 56, 63, 64, 65, 72, 73, 74}
+SETOR 8: X = [3,5] & Y = [6,8] cell={57, 58, 59, 66, 67, 68, 75, 76, 77}
+SETOR 9: X = [6,8] & Y = [6,8] cell={60, 61, 62, 69, 70, 71, 78, 79, 80}
+"""
+
+sectors_slots = [
+    [0, 1, 2, 9, 10, 11, 18, 19, 20],
+    [3, 4, 5, 12, 13, 14, 21, 22, 23],
+    [6, 7, 8, 15, 16, 17, 24, 25, 26],
+    [27, 28, 29, 36, 37, 38, 45, 46, 47],
+    [30, 31, 32, 39, 40, 41, 48, 49, 50],
+    [33, 34, 35, 42, 43, 44, 51, 52, 53],
+    [54, 55, 56, 63, 64, 65, 72, 73, 74],
+    [57, 58, 59, 66, 67, 68, 75, 76, 77],
+    [60, 61, 62, 69, 70, 71, 78, 79, 80]
+]
+
+cell = 0
+
+def print_sudoku():
+    print('-'*20)
+    for row in range(0, 9):
+        for col in range(0, 9):
+            if ((row == 3 or row ==6) and col == 0):
+                print('-' * 20)
+            if (col == 0 or col == 3 or col == 6):
+                print('|', end=" ")
+            print(' ', cell, end=' ')
+            if (col == 8):
+                print('|')
+    print('-'*20)
+
+
+
+for row in range(0, 9):
+    for col in range(0, 9):
+        corner_row = row // 3       # Definição da linha do setor
+        corner_col = col // 3       # Definição da coluna do setor
+        sector = corner_row * 3 + corner_col # Identificação do setor
+        set_sect = list(map(lambda x: board[x // 9][x % 9], sectors_slots[sector]))
+        set_col = list(map(lambda x: board[x][col], range(0, 9)))
+        board[row][col] = rd.choice(list(set_0.difference(set_row.union(set_sect, set_col))))
+        set_row.add(board[row][col])
+        set_col.append(board[row][col])
+        print(f'SET ORIGINAL: {list(set_0.difference(set_row.union(set_sect, set_col)))}')
+        print(f'SECTOR {sector}: CELL {cell}: {board[row][col]}')
+        print(f'SET LINHA: {set_row}')
+        print(f'SET COLUNA: {set_col}')
+        print(f'SET SETOR: {set_sect}')
+        print(f'\n')
+        print(board)
+        print(f'\n')
+        cell += 1
+        if (col == 2 or col==5):
+            set_sect.clear()
+    set_row.clear()
+    set_row = {0}
+print(board)
