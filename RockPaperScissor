@@ -1,0 +1,38 @@
+import random
+
+# CÓDIGO PRINCIPAL
+def play():
+    user = ' '
+    print("""Choose one:
+    [R]\tRock
+    [P]\tPaper
+    [S]\tScissor
+    """)
+    
+    while user not in {'R', 'P', 'S'}:
+        user = input("What's your choice? ").upper()[0]
+        if user not in {'R', 'P', 'S'}:
+            print("\nPlease, choose [R],[P] or [S]")
+            user = input("What's your choice? ").upper()
+        computer = random.choice(['R', 'P', 'S'])
+        print(f"{user} x {computer}\t", end=' ')
+
+    if user == computer:
+        return 'It\'s a tie' # \'s pode ser usado para evitar confusão com as aspas simples
+
+    # R > S, S > P, P > R
+    if is_win(user, computer):
+        return 'You won!'
+
+    return 'You lost!'
+
+
+# CONDIÇÕES DE VITÓRIA
+def is_win(user, computer):
+    # return true if player wins
+    # R > S, S > P, P > R
+    if (user == 'R' and computer == 'S') or (user == 'S' and computer == 'P') or (user == 'P' and computer == 'R'):
+        return True
+
+
+print(play())
